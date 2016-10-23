@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+    <ul>
+        <li><a href="http://localhost/~mfdonadeli/trigo/Candidatos">Candidatos</a></li>
+        <li><a href="http://localhost/~mfdonadeli/trigo/Empresas">Empresas</a></li>
+        <li><a href="http://localhost/~mfdonadeli/trigo/Blog">Blog</a></li>
+        <li><a href="http://localhost/~mfdonadeli/trigo/Cursos">Cursos</a></li>
+    </ul>
+
+    
+    <form action="http://localhost/~mfdonadeli/trigo/candidatos/login" id="form-login" class="form-horizontal" method="post" accept-charset="utf-8">
+
+<!--Field: Username-->
+<p>
+<div id="email_msg"></div>
+<label>Usuário:</label><input type="text" name="email" value="" placeholder="E-mail" style="width:90%" id="email"  />
+</p>
+
+<!--Field: Password-->
+<p>
+<div id="senha_msg"></div>
+<label>Senha:</label><input type="password" name="senha" value="" placeholder="Senha" style="width:90%" id="senha"  />
+</p>
+
+<p>
+    <!--Submit Buttons-->
+        <input type="submit" name="submit" value="Entrar" class="btn btn-primary" id="submit"  />
+</p>
+</form>
+<script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script type='text/javascript'>
+    $('#submit').click(function() {
+    var form_data = {
+        email: $('#email').val(),
+        senha: $('#senha').val()   
+    };
+    
+    $('#email_msg').html("");  
+    $('#senha_msg').html(""); 
+    var ret = false;
+
+    $.ajax({
+        url: "http://localhost/~mfdonadeli/trigo/candidatos/login",
+        type: 'POST',
+        data: form_data,
+        success: function(msg) { 
+            if(msg == 'OK')
+            {
+                $('#email_msg').html("OK");
+                ret = true;
+            }
+            else{
+                var obj = $.parseJSON(msg);
+                $('#email_msg').html(obj.email);  
+                $('#senha_msg').html(obj.senha);
+                ret = false;
+            }              
+        }
+    });
+    return ret;
+});
+</script>
+
+</script>
+
+
+        <form action="http://localhost/~mfdonadeli/trigo/candidatos/cadastrar" id="form-cadastro" class="form-horizontal" method="post" accept-charset="utf-8">
+         <!--Submit Buttons-->
+        <input type="submit" name="submit" value="Incluir Currículo" class="btn btn-primary"  />
+    </form>
+</body>
+</html>
