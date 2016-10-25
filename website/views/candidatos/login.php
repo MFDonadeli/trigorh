@@ -2,6 +2,16 @@
                           'class' => 'form-horizontal'); ?>
 <?php echo form_open('candidatos/login',$attributes); ?>
 
+<?php
+    $data = array(
+        'type'  => 'hidden',
+        'name'  => 'msg',
+        'id'    => 'msg'
+);
+
+echo form_input($data);
+?>
+
 <!--Field: Username-->
 <p>
 <div id="email_msg"></div>
@@ -44,6 +54,8 @@ $data = array(
 </p>
 <?php echo form_close(); ?>
 
+<a href='<?php echo base_url()?>candidatos/recupera_senha'>Esqueci minha senha</a>
+
 <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script type='text/javascript'>
     var ret = false;
@@ -64,6 +76,7 @@ $data = array(
 
     $('#email_msg').html("");  
     $('#senha_msg').html("");
+    $('#senha_msg').val('');
 
     var resp = $.ajax({
         url: "<?php echo site_url('candidatos/login'); ?>",
@@ -74,11 +87,12 @@ $data = array(
         success: function(msg) { 
             var obj = $.parseJSON(msg);
             $('#email_msg').html(obj.email);  
-            $('#senha_msg').html(obj.senha);           
+            $('#senha_msg').html(obj.senha);   
+            $('#msg').val(obj.msg);        
         }
     }).responseText;
 
-    if(resp == 'OK')
+    if($('#msg').val() == '')
         ret = true;
     return aaa();
     //return false;
