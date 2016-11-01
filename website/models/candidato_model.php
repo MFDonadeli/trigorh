@@ -241,5 +241,160 @@
                 return false;    
         }
 
+        /**
+        * update_dados_pessoais
+        *
+        * Atualiza dados pessoais de profissional
+        *
+        * @param	array
+        * @return	boolean	true ou false se existir o pedido
+        */
+        public function update_dados_pessoais($arr)
+        {
+            log_message('debug', 'update_dados_pessoais');
+
+            $this->db->where('cpf', $arr['cpf']);
+
+            $this->db->update('profissional', $arr);
+
+            log_message('debug', 'Last Query: ' . $this->db->last_query());
+        }
+
+        /**
+        * update_formacao_academica
+        *
+        * Insere/Atualiza dados de formação acadêmica do profissional
+        *
+        * @param	array
+        * @return	boolean	true ou false se existir o pedido
+        */
+        public function update_formacao_academica($arr)
+        {
+            log_message('debug', 'update_formacao_academica');
+
+            $this->db->insert('formacao_academica', $arr);
+
+            log_message('debug', 'Last Query: ' . $this->db->last_query());
+        }
+
+        /**
+        * update_historico_profissional
+        *
+        * Insere/Atualiza dados de formação acadêmica do profissional
+        *
+        * @param	array
+        * @param	array
+        * @return	boolean	true ou false se existir o pedido
+        */
+        public function update_historico_profissional($arr, $beneficio)
+        {
+            log_message('debug', 'update_historico_profissional');
+
+            $this->db->insert('historico_profissional', $arr);
+
+            log_message('debug', 'Last Query: ' . $this->db->last_query()); 
+
+            $insert_id = $this->db->insert_id();
+
+            if(is_array($beneficio))
+            {
+                foreach($beneficio as $benef)
+                {
+                    $arrbenef = array(
+                        'idhistorico_profissional' => $insert_id,
+                        'idbeneficio' => $benef
+                    );
+                    $this->db->insert('beneficio_historico', $arrbenef);
+                }
+            }   
+        }
+
+        /**
+        * update_idioma
+        *
+        * Insere/Atualiza dados de formação acadêmica do profissional
+        *
+        * @param	array
+        * @return	boolean	true ou false se existir o pedido
+        */
+        public function update_idioma($arr)
+        {
+            log_message('debug', 'update_idioma');
+
+            $this->db->insert('conhecimento_profissional', $arr);
+
+            log_message('debug', 'Last Query: ' . $this->db->last_query());
+        }
+
+        /**
+        * update_idioma
+        *
+        * Insere/Atualiza dados de formação acadêmica do profissional
+        *
+        * @param	array
+        * @return	boolean	true ou false se existir o pedido
+        */
+        public function update_informatica($arr)
+        {
+            log_message('debug', 'update_idioma');
+
+            $this->db->insert('conhecimento_profissional', $arr);
+
+            log_message('debug', 'Last Query: ' . $this->db->last_query());
+        }
+
+        /**
+        * check_conhecimento_user
+        *
+        * Verifica se existe o conhecimento no banco
+        *
+        * @param	string
+        * @param	string
+        * @return	boolean	false se conhecimento existir
+        */
+        public function check_conhecimento_user($str, $user)
+        {
+            log_message('debug', 'check_conhecimento_user. Param1: {' . $str . '} Param2: {' . $user . '}');
+
+            /*$this->db->select('conhecimento.conhecimento');
+            $this->db->from('conhecimento_profissional');
+            $this->db->join('conhecimento', 
+                'conhecimento_profissional.idconhecimento = conhecimento.idconhecimento');
+            $this->db->where('conhecimento.conhecimento', $str);
+            $this->db->where('conhecimento_profissional.idprofissional', $user);
+            $result = $this->db->get();
+            */
+
+            $this->db->where('idprofissional',$user);
+            $this->db->where('conhecimento',$str);
+            $result = $this->db->get('conhecimento_profissional');
+
+            log_message('debug', 'Last Query: ' . $this->db->last_query());
+
+            if($result->num_rows() > 0)
+            {
+                return false;
+            }
+            else
+                return true; 
+        }
+
+        /**
+        * update_objetivo
+        *
+        * Insere/Atualiza dados de objetivo do profissional
+        *
+        * @param	array
+        * @return	boolean	true ou false se existir o pedido
+        */
+        public function update_objetivo($arr)
+        {
+            log_message('debug', 'update_objetivo');
+
+            $this->db->insert('objetivo_profissional', $arr);
+
+            log_message('debug', 'Last Query: ' . $this->db->last_query());
+        }
+
     }
 ?>

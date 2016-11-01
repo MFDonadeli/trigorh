@@ -99,5 +99,4 @@ $data = array(
 });
 </script>
 
-</script>
 

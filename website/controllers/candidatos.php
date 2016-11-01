@@ -5,6 +5,7 @@
         {
             parent::__construct();
             $this->load->model('Candidato_model');
+            $this->load->model('Preenchimento_model');
             $this->load->library('email');
             $this->load->helper('password_helper');
         }
@@ -84,7 +85,7 @@
 
             $this->form_validation->set_rules('nome', 'Nome Completo', 'min_length[10]|required');
             $this->form_validation->set_rules('email', 'Email', 'min_length[8]|required|valid_email');
-            $this->form_validation->set_rules('cpf', 'CPF', 'min_length[14]|max_length[14]|required|cpf_check');
+            $this->form_validation->set_rules('cpf', 'CPF', 'exact_length[14]|required|cpf_check');
             $this->form_validation->set_rules('senha','Senha','trim|required|min_length[6]|max_length[20]|check_senha_forte');
             $this->form_validation->set_rules('confirma_senha','Confirmação de Senha','trim|required|min_length[6]|max_length[20]|matches[senha]');
 
@@ -186,7 +187,20 @@
         //Página de Cadastro / Edição de Currículo
         public function curriculo()
         {
-            $data = '';
+            $cpf = $this->input->post('cpf');
+
+            $data['cpf'] = $cpf;
+            $data['sexo'] = $this->Preenchimento_model->get_conteudo('sexo');
+            $data['estado_civil'] = $this->Preenchimento_model->get_conteudo('estado_civil');
+            $data['beneficio'] = $this->Preenchimento_model->get_conteudo('beneficio');
+            $data['formacao'] = $this->Preenchimento_model->get_conteudo('formacao');
+            $data['jornada'] = $this->Preenchimento_model->get_conteudo('jornada');
+            $data['setor'] = $this->Preenchimento_model->get_conteudo('setor');
+            $data['tipo_contrato'] = $this->Preenchimento_model->get_conteudo('tipo_contrato');
+            $data['beneficio'] = $this->Preenchimento_model->get_conteudo('beneficio');
+            $data['nivel_hierarquico'] = $this->Preenchimento_model->get_conteudo('nivel_hierarquico');
+            $data['nivel_idioma'] = $this->Preenchimento_model->get_conteudo('nivel_idioma');
+
             $this->load->view('candidatos/curriculo',$data);
         }
 

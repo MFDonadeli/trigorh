@@ -68,7 +68,24 @@ A combinar
 
 Benefícios
 
-
+Auxílio Doença
+Assistência Médica
+Assistência Psiquiátrica/Psicológica
+Assistência Odontológica
+Academia
+Vale Refeição
+Vale Alimentação
+Seguro Educação
+Bolsa de Estudos
+Cursos extra-curriculares
+Previdência privada
+Plano de carreira
+Participação nos lucros
+14o. Salário
+Vale Transporte
+Fretado
+Auxílio Creche
+Telefone Celular
 
 Jornada
 
@@ -933,3 +950,27 @@ Japonês
 Russo
 Alemão
 
+Países
+
+Afeganistão	
+
+
+CI_Model
+search($name)
+$this->db->like('name',$name,'both);
+return $this->db->get('product')->result();
+
+Controller
+search($name)
+$result = $this->mproduct->search($name);
+if(count($result) > 0)
+ foreach($result as $pr)
+  $arr_result[] = $pr->name;
+ echo json_encode($arr_result);
+
+View
+$(document).ready(function() {
+ $('#productname').autocomplete({
+  source: '<?php echo site_url('product/search/?'); ?>'
+ });
+});
