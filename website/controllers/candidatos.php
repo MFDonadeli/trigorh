@@ -54,7 +54,7 @@
                     //Create array of user data
                     $user_data = array(
                             'user_id'   => $user_id,
-                            'username'  => $username,
+                            'username'  => $email,
                             'logged_in' => true
                         );
                         //Set session userdata
@@ -131,7 +131,7 @@
                         //Create array of user data
                         $user_data = array(
                                 'user_id'   => $user_id,
-                                'nome'  => $nome,
+                                'user'  => $email,
                                 'logged_in' => true
                             );
                         //Set session userdata
@@ -170,6 +170,8 @@
         public function home()
         {
             $data['main_content'] = 'home';
+            $data['prof_id'] = $this->session->userdata('user_id');
+            $data['prof'] = $this->session->userdata('user');
             $this->load->view('candidatos/home',$data);  
         }
 
@@ -187,21 +189,28 @@
         //Página de Cadastro / Edição de Currículo
         public function curriculo()
         {
-            $cpf = $this->input->post('cpf');
+            if($this->session->userdata('logged_in'))
+            {
+                $data['dados_pessoais'] = $this->Candidato_model->get_dados_pessoais($this->session->userdata('user_id'));
 
-            $data['cpf'] = $cpf;
-            $data['sexo'] = $this->Preenchimento_model->get_conteudo('sexo');
-            $data['estado_civil'] = $this->Preenchimento_model->get_conteudo('estado_civil');
-            $data['beneficio'] = $this->Preenchimento_model->get_conteudo('beneficio');
-            $data['formacao'] = $this->Preenchimento_model->get_conteudo('formacao');
-            $data['jornada'] = $this->Preenchimento_model->get_conteudo('jornada');
-            $data['setor'] = $this->Preenchimento_model->get_conteudo('setor');
-            $data['tipo_contrato'] = $this->Preenchimento_model->get_conteudo('tipo_contrato');
-            $data['beneficio'] = $this->Preenchimento_model->get_conteudo('beneficio');
-            $data['nivel_hierarquico'] = $this->Preenchimento_model->get_conteudo('nivel_hierarquico');
-            $data['nivel_idioma'] = $this->Preenchimento_model->get_conteudo('nivel_idioma');
+                $data['sexo'] = $this->Preenchimento_model->get_conteudo('sexo');
+                $data['estado_civil'] = $this->Preenchimento_model->get_conteudo('estado_civil');
+                $data['beneficio'] = $this->Preenchimento_model->get_conteudo('beneficio');
+                $data['formacao'] = $this->Preenchimento_model->get_conteudo('formacao');
+                $data['jornada'] = $this->Preenchimento_model->get_conteudo('jornada');
+                $data['setor'] = $this->Preenchimento_model->get_conteudo('setor');
+                $data['tipo_contrato'] = $this->Preenchimento_model->get_conteudo('tipo_contrato');
+                $data['beneficio'] = $this->Preenchimento_model->get_conteudo('beneficio');
+                $data['nivel_hierarquico'] = $this->Preenchimento_model->get_conteudo('nivel_hierarquico');
+                $data['nivel_idioma'] = $this->Preenchimento_model->get_conteudo('nivel_idioma');
 
-            $this->load->view('candidatos/curriculo',$data);
+                $this->load->view('candidatos/curriculo',$data);
+            }
+            else
+            {
+                $data['main_content'] = 'home';
+                $this->load->view('candidatos/login',$data);
+            }
         }
 
         //Página para recuperação de senha

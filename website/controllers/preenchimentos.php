@@ -114,7 +114,7 @@
             else
             {
                 $arr = array(
-                    'idprofissional' => '72',
+                    'idprofissional' => $this->session->userdata('user_id'),
                     'nome_instituicao' => $this->input->post('instituicao'),
                     'idformacao' =>  $this->input->post('formacao'),
                     'curso' =>  $this->input->post('curso'),
@@ -124,7 +124,9 @@
                     'local' =>  $this->input->post('local')
                 );
 
-                $this->Candidato_model->update_formacao_academica($arr);
+                $idhistoricoacademico = $this->input->post('id_historicoacademico');
+
+                $this->Candidato_model->update_formacao_academica($arr, $idhistoricoacademico);
             }
         }
 
@@ -177,7 +179,7 @@
             else
             {
                 $arr = array(
-                    'idprofissional' => '72',
+                    'idprofissional' => $this->session->userdata('user_id'),
                     'nome_empresa' => $this->input->post('empresa'),
                     'idcargo' =>  '-1',
                     'funcao' =>  $this->input->post('cargo'),
@@ -195,14 +197,20 @@
                 );
 
                 $beneficio = $this->input->post('beneficio');
+                $idhistoricoprofissional = $this->input->post('id_historicoacademico');
 
-                $this->Candidato_model->update_historico_profissional($arr, $beneficio);
+                $this->Candidato_model->update_historico_profissional($arr, $beneficio, $idhistoricoprofissional);
             }
         }
 
         public function conhecimento_duplicado($str)
         {
-            $user = '72';
+            $user = $this->session->userdata('user_id');
+            $ididioma = $this->input->post('id_idioma');
+
+            if(!empty($ididioma))
+                return true;
+
             return $this->Candidato_model->check_conhecimento_user($str, $user);
         }
 
@@ -228,13 +236,15 @@
             else
             {
                 $arr = array(
-                    'idprofissional' => '72',
+                    'idprofissional' => $this->session->userdata('user_id'),
                     'nivel' => $this->input->post('nivel_idioma'),
                     'idconhecimento' =>  (empty($this->input->post('ididioma'))) ? '-1' : $this->input->post('ididioma'),
                     'conhecimento' => $this->input->post('idioma')
                 );
 
-                $this->Candidato_model->update_idioma($arr);
+                $ididioma = $this->input->post('id_idioma');
+
+                $this->Candidato_model->update_idioma($arr, $ididioma);
             }
         }
 
@@ -262,13 +272,15 @@
             else
             {
                 $arr = array(
-                    'idprofissional' => '72',
+                    'idprofissional' => $this->session->userdata('user_id'),
                     'tempo' => $this->input->post('qtd_tempo_informatica') . ' ' . $this->input->post('tempo_informatica'),
                     'idconhecimento' =>  (empty($this->input->post('idinformatica'))) ? '-1' : $this->input->post('idinformatica'),
                     'conhecimento' => $this->input->post('informatica')
                 );
 
-                $this->Candidato_model->update_informatica($arr);
+                $idinformatica = $this->input->post('id_informatica');
+
+                $this->Candidato_model->update_informatica($arr, $idinformatica);
             }
         }
 
@@ -306,7 +318,7 @@
             else
             {
                 $arr = array(
-                    'idprofissional' => '72',
+                    'idprofissional' => $this->session->userdata('user_id'),
                     'idcargo' =>  '-1',
                     'funcao' =>  $this->input->post('cargo'),
                     'idtipo_contrato' =>  $this->input->post('tipo_contrato'),
@@ -320,7 +332,9 @@
                     'exibe_salario' =>  $this->input->post('exibe_salario')
                 );
 
-                $this->Candidato_model->update_objetivo($arr);
+                $idobjetivo = $this->input->post('id_objetivo');
+
+                $this->Candidato_model->update_objetivo($arr, $idobjetivo);
             }
         }
 
@@ -369,7 +383,7 @@
         public function busca_idioma()
         {
             $idioma = $this->input->get('term');
-            $profissional = '72';
+            $profissional = $this->session->userdata('user_id');
 
             log_message('debug', 'busca_idioma. Param1: ' . $idioma);
 
@@ -401,7 +415,7 @@
         public function busca_informatica()
         {
             $informatica = $this->input->get('term');
-            $profissional = '72';
+            $profissional = $this->session->userdata('user_id');
 
             log_message('debug', 'busca_informatica. Param1: ' . $informatica);
 
@@ -429,4 +443,230 @@
                 }
             }
         }
+
+        public function get_formacoes_academicas()
+        {
+            log_message('debug', 'get_formacoes_academicas');
+
+            $id = $this->session->userdata('user_id');
+            $result = $this->Candidato_model->get_formacoes_academicas($id);
+
+            if(count($result) > 0)
+            {   
+                $data['dados'] = $result;
+                $data['div_id'] = 'formacao_academica';
+
+                $html = $this->load->view('candidatos/get_formacoes_academicas.php', $data, true);
+
+                echo $html;
+            }
+        }
+
+        public function get_formacao_academica()
+        {
+            log_message('debug', 'get_formacao_academica');
+
+            $id = $this->session->userdata('user_id');
+            $idformacao_academica = str_replace('id_', '', $this->input->post('idformacao_academica'));
+
+            $result = $this->Candidato_model->get_formacao_academica($id, $idformacao_academica);
+
+            $str = json_encode($result);
+
+            echo $str;
+            
+        }
+
+        public function apaga_formacao_academica()
+        {
+            $id = $this->session->userdata('user_id');
+            $idformacao_academica = str_replace('id_', '', $this->input->post('idformacao_academica'));
+
+            log_message('debug', 'apaga_formacao_academica. Param1: ' . $id . " Param2:" . $idformacao_academica);
+
+            $result = $this->Candidato_model->apaga_formacao_academica($id, $idformacao_academica);
+            
+        }
+
+        public function get_historico_profissional()
+        {
+            log_message('debug', 'get_historico_profissional');
+
+            $id = $this->session->userdata('user_id');
+            $id_historicoprofissional = str_replace('id_', '', $this->input->post('id_historicoprofissional'));
+
+            $result = $this->Candidato_model->get_historico_profissional($id, $id_historicoprofissional);
+            $arr_result = json_decode(json_encode($result), true);
+
+            $result = $this->Candidato_model->get_historico_profissional_beneficio($id_historicoprofissional);
+            $arr_beneficio = json_decode(json_encode($result), true);
+            
+            $arr_result['beneficios'] = $arr_beneficio;
+            
+            //echo print_r($arr_result, true);
+            $str = json_encode($arr_result);
+
+            echo $str;
+        }
+
+        public function get_historicos_profissionais()
+        {
+            log_message('debug', 'get_historicos_profissionais');
+
+            $id = $this->session->userdata('user_id');
+            $result = $this->Candidato_model->get_historicos_profissionais($id);
+
+            if(count($result) > 0)
+            {   
+                $data['dados'] = $result;
+                $data['div_id'] = 'historico_profissional';
+
+                $html = $this->load->view('candidatos/get_historicos_profissionais.php', $data, true);
+
+                echo $html;
+            }
+        }
+
+        public function apaga_historico_profissional()
+        {
+            $id = $this->session->userdata('user_id');
+            $id_historicoprofissional = str_replace('id_', '', $this->input->post('id_historicoprofissional'));
+
+            log_message('debug', 'apaga_historico_profissional. Param1: ' . $id . " Param2:" . $id_historicoprofissional);
+
+            $result = $this->Candidato_model->apaga_historico_profissional($id, $id_historicoprofissional);  
+        }
+
+//****** IDIOMA
+        public function get_idioma()
+        {
+            log_message('debug', 'get_idioma');
+
+            $id = $this->session->userdata('user_id');
+            $id_idioma = str_replace('id_', '', $this->input->post('id_idioma'));
+
+            $result = $this->Candidato_model->get_idioma($id, $id_idioma);
+            
+            $str = json_encode($result);
+
+            log_message('debug', 'Json: ' . $str);
+
+            echo $str;
+        }
+
+        public function get_idiomas()
+        {
+            log_message('debug', 'get_idiomas');
+
+            $id = $this->session->userdata('user_id');
+            $result = $this->Candidato_model->get_idiomas($id);
+
+            if(count($result) > 0)
+            {   
+                $data['dados'] = $result;
+                $data['div_id'] = 'div_idioma';
+
+                $html = $this->load->view('candidatos/get_idiomas.php', $data, true);
+
+                echo $html;
+            }
+        }
+
+        public function apaga_idioma()
+        {
+            $id = $this->session->userdata('user_id');
+            $id_idioma = str_replace('id_', '', $this->input->post('id_idioma'));
+
+            log_message('debug', 'apaga_idioma. Param1: ' . $id . " Param2:" . $id_idioma);
+
+            $result = $this->Candidato_model->apaga_idioma($id, $id_idioma);    
+        }
+
+//****** OBJETIVO
+        public function get_objetivo()
+        {
+            log_message('debug', 'get_objetivo');
+
+            $id = $this->session->userdata('user_id');
+            $id_objetivo = str_replace('id_', '', $this->input->post('idobjetivo'));
+
+            $result = $this->Candidato_model->get_objetivo($id, $id_objetivo);
+            
+            $str = json_encode($result);
+
+            echo $str;
+        }
+
+        public function get_objetivos()
+        {
+            log_message('debug', 'get_objetivos');
+
+            $id = $this->session->userdata('user_id');
+            $result = $this->Candidato_model->get_objetivos($id);
+
+            if(count($result) > 0)
+            {   
+                $data['dados'] = $result;
+                $data['div_id'] = 'div_objetivo';
+
+                $html = $this->load->view('candidatos/get_objetivos.php', $data, true);
+
+                echo $html;
+            }
+        }
+
+        public function apaga_objetivo()
+        {
+            $id = $this->session->userdata('user_id');
+            $id_objetivo = str_replace('id_', '', $this->input->post('idobjetivo'));
+
+            log_message('debug', 'apaga_objetivo. Param1: ' . $id . " Param2:" . $id_objetivo);
+
+            $result = $this->Candidato_model->apaga_objetivo($id, $id_objetivo);   
+        }
+
+        //****** INFORMATICA
+        public function get_informatica()
+        {
+            log_message('debug', 'get_informatica');
+
+            $id = $this->session->userdata('user_id');
+            $id_informatica = str_replace('id_', '', $this->input->post('id_informatica'));
+
+            $result = $this->Candidato_model->get_informatica($id, $id_informatica);
+            
+            $str = json_encode($result);
+
+            echo $str;
+        }
+
+        public function get_informaticas()
+        {
+            log_message('debug', 'get_informaticas');
+
+            $id = $this->session->userdata('user_id');
+            $result = $this->Candidato_model->get_informaticas($id);
+
+            if(count($result) > 0)
+            {   
+                $data['dados'] = $result;
+                $data['div_id'] = 'div_informatica';
+
+                $html = $this->load->view('candidatos/get_informatica.php', $data, true);
+
+                echo $html;
+            }
+        }
+
+        public function apaga_informatica()
+        {
+            $id = $this->session->userdata('user_id');
+            $id_informatica = str_replace('id_', '', $this->input->post('id_historicoprofissional'));
+
+            log_message('debug', 'apaga_informatica. Param1: ' . $id . " Param2:" . $id_informatica);
+
+            $result = $this->Candidato_model->apaga_idioma($id, $id_informatica);  
+        }
+        
     }
+
