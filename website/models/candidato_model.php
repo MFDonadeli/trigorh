@@ -304,7 +304,7 @@
                 $this->db->insert('formacao_academica', $arr);
             else
             {
-                $this->db->where('idformacao_academica');
+                $this->db->where('idformacao_academica', $idhistoricoacademico);
                 $this->db->update('formacao_academica', $arr);
             }
 
@@ -389,12 +389,10 @@
         */
         public function update_historico_profissional($arr, $beneficio, $idhistoricoprofissional)
         {
-            log_message('debug', 'update_historico_profissional');
+            log_message('debug', 'update_historico_profissional. ID' . $idhistoricoprofissional);
 
             if(empty($idhistoricoprofissional))
             {
-                $this->db->insert('formacao_academica', $arr);
-
                 $this->db->insert('historico_profissional', $arr);
 
                 log_message('debug', 'Last Query: ' . $this->db->last_query()); 
@@ -415,8 +413,23 @@
             }
             else
             {
-                $this->db->where('idformacao_academica');
-                $this->db->update('formacao_academica', $arr);
+                $this->db->where('idhistorico_profissional', $idhistoricoprofissional);
+                $this->db->update('historico_profissional', $arr);
+
+                if(is_array($beneficio))
+                {
+                    $this->db->where('idhistorico_profissional', $idhistoricoprofissional);
+                    $this->db->delete('beneficio_historico');
+
+                    foreach($beneficio as $benef)
+                    {
+                        $arrbenef = array(
+                            'idhistorico_profissional' => $idhistoricoprofissional,
+                            'idbeneficio' => $benef
+                        );
+                        $this->db->insert('beneficio_historico', $arrbenef);
+                    }
+                } 
             }  
         }
 
@@ -434,13 +447,13 @@
             log_message('debug', 'apaga_historico_profissional');
 
             $this->db->where('idhistorico_profissional', $idhistoricoprofissional);
-            $this->db->where('idprofissional', $id);
-            $this->db->delete('formacao_academica');
+            $this->db->delete('beneficio_historico');
 
             log_message('debug', 'Last Query: ' . $this->db->last_query());
 
             $this->db->where('idhistorico_profissional', $idhistoricoprofissional);
-            $this->db->delete('beneficio_historico');
+            $this->db->where('idprofissional', $id);
+            $this->db->delete('historico_profissional');
 
             log_message('debug', 'Last Query: ' . $this->db->last_query());
         }
@@ -555,6 +568,7 @@
             }
 
             log_message('debug', 'Last Query: ' . $this->db->last_query());
+
         }
 
         /**
@@ -829,6 +843,101 @@
 
             log_message('debug', 'Last Query: ' . $this->db->last_query());
         }
+
+        /**
+        * update_porcentagem_curriculo
+        *
+        * Atualiza porcentagem de preenchimento do currículo do profissional
+        *
+        * @param	int
+        * @return	boolean	true ou false se existir o pedido
+        */
+        public function update_porcentagem_curriculo($id)
+        {
+            log_message('debug', 'update_porcentagem_curriculo. Param1: ' . $id);
+
+            $this->db->select("count(*)");
+            $this->db->where("idprofissional", $id);
+            $query1 = $this->db->get_compiled_select("profissional");
+
+            $this->db->select("count(*)");
+            $this->db->where("idprofissional", $id);
+            $query2 = $this->db->get_compiled_select("historico_profissional");
+
+            $this->db->select("count(*)");
+            $this->db->where("idprofissional", $id);
+            $query3 = $this->db->get_compiled_select("formacao_academica");
+
+            $this->db->select("count(*)");
+            $this->db->where("idprofissional", $id);
+            $query4 = $this->db->get_compiled_select("objetivo_profissional");
+
+            $this->db->select("count(*)");
+            $this->db->from("conhecimento_profissional cp");
+            $this->db->join("conhecimento c", "cp.idconhecimento = c.idconhecimento");
+            $this->db->where("c.idtipo_conhecimento = 1");
+            $this->db->where("cp.idprofissional", $id);
+            $query5 = $this->db->get_compiled_select();
+
+            $this->db->select("count(*)");
+            $this->db->from("conhecimento_profissional cp");
+            $this->db->join("conhecimento c", "cp.idconhecimento = c.idconhecimento");
+            $this->db->where("c.idtipo_conhecimento = 2");
+            $this->db->where("cp.idprofissional", $id);
+            $query6 = $this->db->get_compiled_select();
+
+            $result = $this->db->query("SELECT (" .
+                            $query1 . ") as profissional, (" .
+                            $query2 . ") as historico_profissional, (" .
+                            $query3 . ") as formacao_academica, (" .
+                            $query4 . ") as objetivo_profissional, (" .
+                            $query5 . ") as idioma, (" .
+                            $query6 . ") as informatica " );
+
+            log_message('debug', 'Last Query: ' . $this->db->last_query());
+
+            $porcentagem = 0;
+
+            if($result->row()->profissional > 0) $porcentagem += Acao::CURRICULO_DADOS_PESSOAIS;
+            if($result->row()->historico_profissional > 0) $porcentagem += Acao::CURRICULO_FORMACAO_ACADEMICA;
+            if($result->row()->formacao_academica > 0) $porcentagem += Acao::CURRICULO_EXPERIENCIA_PROFISSIONAL;
+            if($result->row()->idioma > 0) $porcentagem += Acao::CURRICULO_IDIOMA;
+            if($result->row()->informatica > 0) $porcentagem += Acao::CURRICULO_INFORMATICA;
+            if($result->row()->objetivo_profissional > 0) $porcentagem += Acao::CURRICULO_OBJETIVO;
+
+            $this->db->set('porcentagem_cadastro', $porcentagem);
+            $this->db->where('idprofissional', $id);
+            $this->db->update('profissional');
+
+            log_message('debug', 'Last Query: ' . $this->db->last_query());
+
+            $this->registra_acao($id, Acao::ATUALIZA_CV);
+        }
+
+        /**
+        * informacao_basica
+        *
+        * Traz nome, porcentagem do currículo preenchido e data da última atualização do currículo
+        *
+        * @param	int
+        * @return	array
+        */
+        public function informacao_basica($id)
+        {
+            log_message('debug', 'informacao_basica. Param1: ' . $id);
+
+            $this->db->select('p.nome, p.porcentagem_cadastro, ph.data');
+            $this->db->from('profissional p');
+            $this->db->join('profissional_historico ph', 'p.idprofissional = ph.idprofissional');
+            $this->db->where('p.idprofissional', $id);
+            $this->db->where('ph.idacao = 2');
+            $this->db->order_by('ph.idprofissional_historico', 'DESC');
+            $this->db->limit(1);
+            $result = $this->db->get();
+
+            return $result->row();
+        }
+
 
     }
 ?>

@@ -17,5 +17,7 @@
     ?>    
 </div>
 
-
+<?php if($libera_objetivos): ?>
+<button id='add_objetivo'>Incluir Novo Objetivo Profissional</button>
+<?php endif; ?>
 

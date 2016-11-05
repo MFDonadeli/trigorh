@@ -12,5 +12,12 @@
         const COMPROU_CREDITO = 9;
         const DESATIVOU_CADASTRO = 10;
         const PEDIDO_ALTERA_SENHA = 11;
+
+        const CURRICULO_DADOS_PESSOAIS = 15;
+        const CURRICULO_FORMACAO_ACADEMICA = 18;
+        const CURRICULO_EXPERIENCIA_PROFISSIONAL = 18;
+        const CURRICULO_IDIOMA = 15;
+        const CURRICULO_INFORMATICA = 15;
+        const CURRICULO_OBJETIVO = 19;
     }
 ?>

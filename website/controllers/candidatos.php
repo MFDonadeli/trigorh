@@ -172,6 +172,9 @@
             $data['main_content'] = 'home';
             $data['prof_id'] = $this->session->userdata('user_id');
             $data['prof'] = $this->session->userdata('user');
+
+            $data['profissional'] = $this->Candidato_model->informacao_basica($this->session->userdata('user_id'));
+
             $this->load->view('candidatos/home',$data);  
         }
 

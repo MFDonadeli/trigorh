@@ -69,6 +69,8 @@
                 );
 
                 $this->Candidato_model->update_dados_pessoais($arr);
+
+                $this->Candidato_model->update_porcentagem_curriculo($this->session->userdata('user_id'));
             }
         }
 
@@ -127,6 +129,8 @@
                 $idhistoricoacademico = $this->input->post('id_historicoacademico');
 
                 $this->Candidato_model->update_formacao_academica($arr, $idhistoricoacademico);
+
+                $this->Candidato_model->update_porcentagem_curriculo($this->session->userdata('user_id'));
             }
         }
 
@@ -188,7 +192,7 @@
                     'situacao' =>  $this->input->post('situacao'),
                     'atividades' =>  $this->input->post('atividades'),
                     'ultimo_salario' =>  $this->input->post('salario'),
-                    'informar' =>  $this->input->post('informar'),
+                    'informar' =>  $this->input->post('informar_salario'),
                     'idtipo_contrato' =>  $this->input->post('tipo_contrato'),
                     'idsetor' =>  $this->input->post('setor'),
                     'idjornada' =>  $this->input->post('jornada'),
@@ -197,19 +201,22 @@
                 );
 
                 $beneficio = $this->input->post('beneficio');
-                $idhistoricoprofissional = $this->input->post('id_historicoacademico');
+                $idhistoricoprofissional = $this->input->post('id_historicoprofissional');
 
                 $this->Candidato_model->update_historico_profissional($arr, $beneficio, $idhistoricoprofissional);
+
+                $this->Candidato_model->update_porcentagem_curriculo($this->session->userdata('user_id'));
             }
         }
 
         public function conhecimento_duplicado($str)
         {
             $user = $this->session->userdata('user_id');
-            $ididioma = $this->input->post('id_idioma');
 
-            if(!empty($ididioma))
-                return true;
+            $idconhecimento = $this->input->post('id_idioma');
+            if(!empty($idconhecimento)) return true;
+            $idconhecimento = $this->input->post('id_informatica');
+            if(!empty($idconhecimento)) return true;
 
             return $this->Candidato_model->check_conhecimento_user($str, $user);
         }
@@ -245,6 +252,8 @@
                 $ididioma = $this->input->post('id_idioma');
 
                 $this->Candidato_model->update_idioma($arr, $ididioma);
+
+                $this->Candidato_model->update_porcentagem_curriculo($this->session->userdata('user_id'));
             }
         }
 
@@ -281,6 +290,8 @@
                 $idinformatica = $this->input->post('id_informatica');
 
                 $this->Candidato_model->update_informatica($arr, $idinformatica);
+
+                $this->Candidato_model->update_porcentagem_curriculo($this->session->userdata('user_id'));
             }
         }
 
@@ -335,6 +346,8 @@
                 $idobjetivo = $this->input->post('id_objetivo');
 
                 $this->Candidato_model->update_objetivo($arr, $idobjetivo);
+
+                $this->Candidato_model->update_porcentagem_curriculo($this->session->userdata('user_id'));
             }
         }
 
@@ -608,6 +621,7 @@
             {   
                 $data['dados'] = $result;
                 $data['div_id'] = 'div_objetivo';
+                $data['libera_objetivos'] = $this->Preenchimento_model->libera_objetivos($this->session->userdata('user_id'));
 
                 $html = $this->load->view('candidatos/get_objetivos.php', $data, true);
 
@@ -635,7 +649,15 @@
 
             $result = $this->Candidato_model->get_informatica($id, $id_informatica);
             
-            $str = json_encode($result);
+            $arr_informatica = json_decode(json_encode($result), true);
+
+            preg_match('/[^\d]+/', $arr_informatica['tempo'], $textMatch);
+            preg_match('/\d+/', $arr_informatica['tempo'], $numMatch);
+
+            $arr_informatica['tempo_grandeza'] = trim($textMatch[0]);
+            $arr_informatica['tempo_numero'] = trim($numMatch[0]);
+
+            $str = json_encode($arr_informatica);
 
             echo $str;
         }
@@ -661,7 +683,7 @@
         public function apaga_informatica()
         {
             $id = $this->session->userdata('user_id');
-            $id_informatica = str_replace('id_', '', $this->input->post('id_historicoprofissional'));
+            $id_informatica = str_replace('id_', '', $this->input->post('id_informatica'));
 
             log_message('debug', 'apaga_informatica. Param1: ' . $id . " Param2:" . $id_informatica);
 

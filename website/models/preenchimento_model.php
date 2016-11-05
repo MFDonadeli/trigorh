@@ -82,5 +82,20 @@
 
             return $result->result();
         }
+
+        public function libera_objetivos($id)
+        {
+            log_message('debug', 'libera_objetivos. Param1: ' . $id);   
+
+            $this->db->select('count(*) as count'); 
+            $this->db->from('objetivo_profissional');
+            $this->db->where('idprofissional', $id);
+            $result = $this->db->get();
+
+            if($result->row()->count > 2)
+                return false;
+            else
+                return true;
+        }
     }
 ?>
