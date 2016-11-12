@@ -46,6 +46,34 @@ class MY_Form_validation extends CI_Form_validation
         return $cpf{10} == ($resto < 2 ? 0 : 11 - $resto);
     }
 
+    function cnpj_check($str)
+    {
+        $cnpj = preg_replace('/[^0-9]/', '', (string) $str);
+
+        // Valida tamanho
+        if (strlen($cnpj) != 14)
+            return false;
+
+        $arr_digitos1 = array(5,4,3,2,9,8,7,6,5,4,3,2);
+        // Calcula e confere primeiro dígito verificador
+        for ($i = 0, $soma = 0; $i < 12; $i++)
+            $soma += $cnpj{$i} * $arr_digitos1{$i};
+
+        $resto = $soma % 11;
+
+        if ($cnpj{12} != ($resto < 3 ? 0 : 11 - $resto))
+            return false;
+
+        $arr_digitos2 = array(6,5,4,3,2,9,8,7,6,5,4,3,2);
+        // Calcula e confere segundo dígito verificador
+        for ($i = 0, $soma = 0; $i < 13; $i++)
+            $soma += $cnpj{$i} * $arr_digitos2{$i};
+
+        $resto = $soma % 11;
+
+        return $cnpj{13} == ($resto < 3 ? 0 : 11 - $resto);
+    }
+
     //http://codigofonte.uol.com.br/codigos/validacao-completa-de-datas-em-javascript
     function data_check($str)
     {

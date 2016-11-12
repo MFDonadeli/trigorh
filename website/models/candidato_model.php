@@ -22,6 +22,7 @@
 
             //Validate
             $this->db->where('email',$email);
+            $this->db->where('idprofissional != -1');
             
             $result = $this->db->get('usuario');
 
@@ -415,6 +416,8 @@
             {
                 $this->db->where('idhistorico_profissional', $idhistoricoprofissional);
                 $this->db->update('historico_profissional', $arr);
+
+                log_message('debug', 'Last Query: ' . $this->db->last_query()); 
 
                 if(is_array($beneficio))
                 {

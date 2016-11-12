@@ -113,41 +113,19 @@
     <input type="submit" name="submit_hp" value="Salvar" id="submit_hp"  />
 </form>
 
+<p id='idioma_action' hidden><?php echo base_url(); ?>preenchimentos/idioma</p>
+<p id='idioma_autocomplete' hidden><?php echo base_url(); ?>preenchimentos/busca_idioma/</p>
+<p id='idioma_list' hidden><?php echo base_url(); ?>preenchimentos/get_idiomas</p>
+<p id='idioma_edit' hidden><?php echo base_url(); ?>preenchimentos/get_idioma</p>
+<p id='idioma_erase' hidden><?php echo base_url(); ?>preenchimentos/apaga_idioma</p>
+<?php $this->load->view('candidatos/idioma'); ?>
 
-<!-- IDIOMA -->
-<div id='lista_idioma'></div>
-
-<button id='add_idioma'>Incluir Novo Idioma</button>
-
-<form action='<?php echo base_url(); ?>candidatos/curriculo' id='form-conhecimento-idioma' method='post' accept-charset="utf-8">
-    <input type="hidden" name="id_idioma" value="" id="id_idioma"  />
-    <div id="idioma_msg"></div><label>Idioma:</label><input type='text' name='idioma' value='' id='idioma' /><br>  
-    <input type="hidden" name="ididioma" value="" id="ididioma"  />
-    <div id="nivel_idioma_msg"></div><label>Nível</label>
-        <select name='nivel_idioma' id='nivel_idioma'>
-            <?php foreach($nivel_idioma as $nivel_idioma_opt): ?>
-                <option value='<?php echo($nivel_idioma_opt->idnivel_idioma); ?>'><?php echo($nivel_idioma_opt->nivel_idioma); ?></option>
-            <?php endforeach; ?>
-        </select>  
-    <input type="submit" name="submit_idioma" value="Salvar" id="submit_idioma"  /> 
-</form>
-
-<!-- CONHECIMENTO INFORMÁTICA -->
-<div id='lista_informatica'></div>
-
-<button id='add_informatica'>Incluir Novo Conhecimento em Informática</button>
-<form action='<?php echo base_url(); ?>candidatos/curriculo' id='form-conhecimento-informatica' method='post' accept-charset="utf-8">
-    <input type="hidden" name="id_informatica" value="" id="id_informatica"  />
-    <div id="informatica_msg"></div><label>Conhecimento:</label><input type='text' name='informatica' value='' id='informatica' /><br>  
-    <input type="hidden" name="idinformatica" value="" id="idinformatica"  />
-    <div id="tempo_experiencia_msg"></div><label>Tempo de Experiência</label>
-        <input type='text' name='qtd_tempo_informatica' value='' id='qtd_tempo_informatica' />
-        <select name='tempo_informatica' id='tempo_informatica'>
-            <option value='Meses'>Meses</option>
-            <option value='Anos'>Anos</option>
-        </select> 
-    <input type="submit" name="submit_informatica" value="Salvar" id="submit_informatica"  />   
-</form>
+<p id='informatica_action' hidden><?php echo base_url(); ?>preenchimentos/informatica</p>
+<p id='informatica_autocomplete' hidden><?php echo base_url(); ?>preenchimentos/busca_informatica/</p>
+<p id='informatica_list' hidden><?php echo base_url(); ?>preenchimentos/get_informaticas</p>
+<p id='informatica_edit' hidden><?php echo base_url(); ?>preenchimentos/get_informatica</p>
+<p id='informatica_erase' hidden><?php echo base_url(); ?>preenchimentos/apaga_informatica</p>
+<?php $this->load->view('candidatos/informatica'); ?>
 
 <!-- OBJETIVO -->
 <div id='lista_objetivo'></div>

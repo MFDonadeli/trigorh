@@ -954,23 +954,18 @@ Países
 
 Afeganistão	
 
+Escalas
 
-CI_Model
-search($name)
-$this->db->like('name',$name,'both);
-return $this->db->get('product')->result();
+4x2
+5x1
+5x2
+6x1
+12x36
+18x36
+24x48
 
-Controller
-search($name)
-$result = $this->mproduct->search($name);
-if(count($result) > 0)
- foreach($result as $pr)
-  $arr_result[] = $pr->name;
- echo json_encode($arr_result);
 
-View
-$(document).ready(function() {
- $('#productname').autocomplete({
-  source: '<?php echo site_url('product/search/?'); ?>'
- });
-});
+conhecimento_candidato
+conhecimento
+
+conhecimento se o conhecimento nao existir em conhecimento_candidato

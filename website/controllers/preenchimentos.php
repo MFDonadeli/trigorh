@@ -259,7 +259,7 @@
 
         public function informatica()
         {
-            log_message('debug', 'Valida Idioma');
+            log_message('debug', 'Valida Informatica');
 
             log_message('debug', $this->input->raw_input_stream);
 
@@ -560,7 +560,11 @@
 
             $result = $this->Candidato_model->get_idioma($id, $id_idioma);
             
-            $str = json_encode($result);
+            $arr_idioma = json_decode(json_encode($result), true);
+
+            $arr_idioma['id_idioma'] = $arr_idioma['idconhecimento_vaga'];
+            
+            $str = json_encode($arr_idioma);
 
             log_message('debug', 'Json: ' . $str);
 
@@ -656,6 +660,7 @@
 
             $arr_informatica['tempo_grandeza'] = trim($textMatch[0]);
             $arr_informatica['tempo_numero'] = trim($numMatch[0]);
+            $arr_informatica['id_informatica'] = $arr_informatica['idconhecimento_profissional'];
 
             $str = json_encode($arr_informatica);
 

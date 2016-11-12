@@ -1,6 +1,6 @@
 <?php $attributes = array('id' => 'form-login',
                           'class' => 'form-horizontal'); ?>
-<?php echo form_open('candidatos/login',$attributes); ?>
+<?php echo form_open('empresas/login',$attributes); ?>
 
 <?php
     $data = array(
@@ -54,19 +54,11 @@ $data = array(
 </p>
 <?php echo form_close(); ?>
 
-<a href='<?php echo base_url()?>candidatos/recupera_senha'>Esqueci minha senha</a>
+<a href='<?php echo base_url()?>empresas/recupera_senha'>Esqueci minha senha</a>
 
 <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script type='text/javascript'>
     var ret = false;
-
-    function aaa()
-    {
-        if(ret)
-            return true;
-        else
-            return false;
-    }
 
     $('#entrar').click(function() {
     var form_data = {
@@ -79,7 +71,7 @@ $data = array(
     $('#senha_msg').val('');
 
     var resp = $.ajax({
-        url: "<?php echo site_url('candidatos/login'); ?>",
+        url: "<?php echo site_url('empresas/login'); ?>",
         type: 'POST',
         data: form_data,
         global: false,
@@ -94,6 +86,8 @@ $data = array(
 
     if($('#msg').val() == '')
         $('#form-login').submit();
+    return aaa();
+    //return false;
 });
 </script>
 

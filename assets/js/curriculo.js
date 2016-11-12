@@ -1,59 +1,59 @@
 var base_url = 'http://localhost/~mfdonadeli/trigo/';
 
     $('#submit').click(function() {
-    var form_data = {
-        nome: $('#nome').val(),
-        cpf: $('#cpf').val(),
-        celular: $('#celular').val(),
-        observacao_celular: $('#observacao_celular').val(),
-        telefone_fixo: $('#telefone_fixo').val(),
-        observacao_telefone_fixo: $('#observacao_telefone_fixo').val(),
-        data_nascimento: $('#data_nascimento').val(),
-        estado_civil: $('#estado_civil').val(),
-        sexo: $("input[name='sexo']:checked").val(),
-        cep: $('#cep').val(),
-        endereco: $('#endereco').val(),
-        bairro: $('#bairro').val(),
-        cidade: $('#cidade').val(),
-        id_cidade: $('#id_cidade').val(),
-        numero: $('#numero').val(),
-        complemento: $('#complemento').val(),
-        pode_viajar: $('#pode_viajar').val(),
-        pode_mudar: $('#pode_mudar').val(),
-        deficiente: $('#deficiente').val(),
-        observacoes_dadospessoais: $('#observacoes_dadospessoais').val()
-    };
+        var form_data = {
+            nome: $('#nome').val(),
+            cpf: $('#cpf').val(),
+            celular: $('#celular').val(),
+            observacao_celular: $('#observacao_celular').val(),
+            telefone_fixo: $('#telefone_fixo').val(),
+            observacao_telefone_fixo: $('#observacao_telefone_fixo').val(),
+            data_nascimento: $('#data_nascimento').val(),
+            estado_civil: $('#estado_civil').val(),
+            sexo: $("input[name='sexo']:checked").val(),
+            cep: $('#cep').val(),
+            endereco: $('#endereco').val(),
+            bairro: $('#bairro').val(),
+            cidade: $('#cidade').val(),
+            id_cidade: $('#id_cidade').val(),
+            numero: $('#numero').val(),
+            complemento: $('#complemento').val(),
+            pode_viajar: $('#pode_viajar').val(),
+            pode_mudar: $('#pode_mudar').val(),
+            deficiente: $('#deficiente').val(),
+            observacoes_dadospessoais: $('#observacoes_dadospessoais').val()
+        };
 
-    $('#nome_msg').html("");  
-    $('#cpf_msg').html("");
-    $('#celular_msg').html('');
-    $('#data_nascimento_msg').html('');
-    $('#sexo_msg').html('');
-    $('#estado_civil_msg').html('');
-    $('#cep_msg').html('');
-    $('#endereco_msg').html('');
-    $('#cidade_msg').html('');
-    $('#msg_dadospessoais').val(''); 
+        $('#nome_msg').html("");  
+        $('#cpf_msg').html("");
+        $('#celular_msg').html('');
+        $('#data_nascimento_msg').html('');
+        $('#sexo_msg').html('');
+        $('#estado_civil_msg').html('');
+        $('#cep_msg').html('');
+        $('#endereco_msg').html('');
+        $('#cidade_msg').html('');
+        $('#msg_dadospessoais').val(''); 
 
-    var resp = $.ajax({
-        url: base_url + "preenchimentos/dadospessoais",
-        type: 'POST',
-        data: form_data,
-        global: false,
-        async:false,
-        success: function(msg) { 
-            var obj = $.parseJSON(msg);
-            $('#nome_msg').html(obj.nome);  
-            $('#cpf_msg').html(obj.cpf);
-            $('#celular_msg').html(obj.celular);
-            $('#data_nascimento_msg').html(obj.data_nascimento);
-            $('#sexo_msg').html(obj.sexo);
-            $('#estado_civil_msg').html(obj.estado_civil);
-            $('#cidade_msg').html(obj.cidade); 
-            $('#endereco_msg').html(obj.endereco); 
-            $('#cep_msg').html(obj.cep);  
-            $('#msg_dadospessoais').val(obj.msg);        
-        }
+        var resp = $.ajax({
+            url: base_url + "preenchimentos/dadospessoais",
+            type: 'POST',
+            data: form_data,
+            global: false,
+            async:false,
+            success: function(msg) { 
+                var obj = $.parseJSON(msg);
+                $('#nome_msg').html(obj.nome);  
+                $('#cpf_msg').html(obj.cpf);
+                $('#celular_msg').html(obj.celular);
+                $('#data_nascimento_msg').html(obj.data_nascimento);
+                $('#sexo_msg').html(obj.sexo);
+                $('#estado_civil_msg').html(obj.estado_civil);
+                $('#cidade_msg').html(obj.cidade); 
+                $('#endereco_msg').html(obj.endereco); 
+                $('#cep_msg').html(obj.cep);  
+                $('#msg_dadospessoais').val(obj.msg);        
+            }
     }).responseText;
 
     alert(resp);
@@ -395,30 +395,30 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
         $('#nivel_idioma').val('1'); 
     }
 
-    $('#add_idioma').click(function(){
+    $(document).on('click', '#add_idioma', function() {
         limpa_idioma();
     }); 
 
     $('#submit_idioma').click(function() {
-    var form_data = {
-        id_idioma: $('#id_idioma').val(),
-        idioma: $('#idioma').val(),
-        nivel_idioma: $('#nivel_idioma').val(),
-        ididioma: $('#ididioma').val()
-    };
+        var form_data = {
+            id_idioma: $('#id_idioma').val(),
+            idioma: $('#idioma').val(),
+            nivel_idioma: $('#nivel_idioma').val(),
+            ididioma: $('#ididioma').val()
+        };
 
-    $('#idioma_msg').html("");  
+        $('#idioma_msg').html("");  
 
-    var resp = $.ajax({
-        url: base_url + "preenchimentos/idioma",
-        type: 'POST',
-        data: form_data,
-        global: false,
-        async:false,
-        success: function(msg) { 
-            var obj = $.parseJSON(msg);
-            $('#idioma_msg').html(obj.idioma);        
-        }
+        var resp = $.ajax({
+            url: $('#idioma_action').html(),
+            type: 'POST',
+            data: form_data,
+            global: false,
+            async:false,
+            success: function(msg) { 
+                var obj = $.parseJSON(msg);
+                $('#idioma_msg').html(obj.idioma);        
+            }
     }).responseText;
 
     alert(resp);
@@ -431,7 +431,7 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
      $(function() {
 	    $("#idioma").autocomplete({
             source: function(request, response) {
-					$.getJSON(base_url + "preenchimentos/busca_idioma/?", {
+					$.getJSON($('#idioma_autocomplete').html()+"?", {
 						term: request.term
 					}, function(data){
               response($.map(data, function(value,key) {
@@ -460,7 +460,7 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
     function fill_lista_idioma()
     {
         $.ajax({
-        url: base_url + "preenchimentos/get_idiomas",
+        url: $('#idioma_list').html(),
         type:       'POST',
         cache:      false,
         success: function(html){                    
@@ -483,14 +483,14 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
         };
 
         var resp = $.ajax({
-        url: base_url + "preenchimentos/get_idioma",
+        url: $('#idioma_edit').html(),
         type: 'POST',
         data: form_data,
         global: false,
         async:false,
         success: function(msg) { 
             var obj = $.parseJSON(msg);
-            $('#id_idioma').val(obj.idconhecimento_profissional);
+            $('#id_idioma').val(obj.id_idioma);
             $('#idioma').val(obj.conhecimento);
             $('#ididioma').val(obj.idconhecimento);
             $('#nivel_idioma').val(obj.nivel);       
@@ -507,7 +507,7 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
         };
 
         var resp = $.ajax({
-        url: base_url + "preenchimentos/apaga_idioma",
+        url: $('#idioma_erase').html(),
         type: 'POST',
         data: form_data,
         global: false,
@@ -534,33 +534,33 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
         $('#qtd_tempo_informatica').val(''); 
     }
 
-    $('#add_informatica').click(function(){
+    $(document).on('click', '#add_informatica', function() {
         limpa_informatica();
     }); 
 
     $('#submit_informatica').click(function() {
-    var form_data = {
-        id_informatica: $('#id_informatica').val(),
-        informatica: $('#informatica').val(),
-        qtd_tempo_informatica: $('#qtd_tempo_informatica').val(),
-        tempo_informatica: $('#tempo_informatica').val(),
-        idinformatica: $('#idinformatica').val()
-    };
+        var form_data = {
+            id_informatica: $('#id_informatica').val(),
+            informatica: $('#informatica').val(),
+            qtd_tempo_informatica: $('#qtd_tempo_informatica').val(),
+            tempo_informatica: $('#tempo_informatica').val(),
+            idinformatica: $('#idinformatica').val()
+        };
 
-    $('#informatica_msg').html(""); 
-    $('#tempo_experiencia_msg').html("");  
+        $('#informatica_msg').html(""); 
+        $('#tempo_experiencia_msg').html("");  
 
-    var resp = $.ajax({
-        url: base_url + "preenchimentos/informatica",
-        type: 'POST',
-        data: form_data,
-        global: false,
-        async:false,
-        success: function(msg) { 
-            var obj = $.parseJSON(msg);
-            $('#informatica_msg').html(obj.informatica); 
-            $('#tempo_experiencia_msg').html(obj.tempo_informatica);        
-        }
+        var resp = $.ajax({
+            url: $('#informatica_action').html(),
+            type: 'POST',
+            data: form_data,
+            global: false,
+            async:false,
+            success: function(msg) { 
+                var obj = $.parseJSON(msg);
+                $('#informatica_msg').html(obj.informatica); 
+                $('#tempo_experiencia_msg').html(obj.tempo_informatica);        
+            }
     }).responseText;
 
     alert(resp);
@@ -574,7 +574,7 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
      $(function() {
 	    $("#informatica").autocomplete({
             source: function(request, response) {
-					$.getJSON(base_url + "preenchimentos/busca_informatica/?", {
+					$.getJSON($('#informatica_autocomplete').html()+"/?", {
 						term: request.term
 					}, function(data){
               response($.map(data, function(value,key) {
@@ -604,7 +604,7 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
     function fill_lista_informatica()
     {
         $.ajax({
-        url: base_url + "preenchimentos/get_informaticas",
+        url: $('#informatica_list').html(),
         type:       'POST',
         cache:      false,
         success: function(html){                    
@@ -627,14 +627,14 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
         };
 
         var resp = $.ajax({
-        url: base_url + "preenchimentos/get_informatica",
+        url: $('#informatica_edit').html(),
         type: 'POST',
         data: form_data,
         global: false,
         async:false,
         success: function(msg) { 
             var obj = $.parseJSON(msg);
-            $('#id_informatica').val(obj.idconhecimento_profissional);
+            $('#id_informatica').val(obj.id_informatica);
             $('#informatica').val(obj.conhecimento);
             $('#idinformatica').val(obj.idconhecimento);
             $('#qtd_tempo_informatica').val(obj.tempo_numero); 
@@ -644,8 +644,6 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
     }).responseText;
 
     alert(resp);
-
-    fill_lista_informatica();
 });
 
     $(document).on('click', '.erase_informatica', function() {
@@ -655,7 +653,7 @@ var base_url = 'http://localhost/~mfdonadeli/trigo/';
         };
 
         var resp = $.ajax({
-        url: base_url + "preenchimentos/apaga_informatica",
+        url: $('#informatica_erase').html(),
         type: 'POST',
         data: form_data,
         global: false,

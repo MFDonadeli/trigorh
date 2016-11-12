@@ -1,0 +1,11 @@
+delete from usuario;
+delete from empresa_historico;
+delete from empresa;
+delete from vaga;
+delete from profissional_historico;
+delete from conhecimento_profissional;
+delete from beneficio_historico;
+delete from formacao_academica;
+delete from historico_profissional;
+delete from objetivo_profissional;
+delete from profissional;
