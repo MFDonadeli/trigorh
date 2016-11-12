@@ -155,6 +155,28 @@
             $this->form_validation->set_rules('formacao', 'Formação', 'required|greater_than[-1]');
             $this->form_validation->set_rules('situacao', 'Situação', 'required');
 
+            if(empty($this->input->post('curso')))
+            {
+                switch($this->input->post('formacao'))  
+                {
+                    case 1:
+                        $curso = 'Ensino Fundamental (1 grau)';
+                        break;
+                    case 3:
+                        $curso = 'Ensino Fundamental (2 grau)';
+                        break;
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                        $curso = 'Qualquer';
+                        break;
+                    default:
+                        $this->form_validation->set_rules('curso', 'Curso', 'min_length[10]|required');
+                }
+            }
+
             if ($this->form_validation->run() == FALSE) 
             {
                 log_message('debug', 'Falhou na validacao');
@@ -169,11 +191,6 @@
             }
             else
             {
-                if(empty($this->input->post('curso')))
-                {
-                    
-                }
-
                 $arr = array(
                     'idvaga' => $id,
                     'idformacao' =>  $this->input->post('formacao'),
